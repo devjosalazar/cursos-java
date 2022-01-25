@@ -21,8 +21,6 @@ public class EjemplosBasicos {
 
 	public static void main(String[] args) {
 		
-		
-
 		//Archivos de Registro
 //		archivoRegistro();
 		

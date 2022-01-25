@@ -14,9 +14,9 @@ public class EscrituraLectuarArchivos {
 		
 //		fileReaderYWriter_V1();
 //		fileReaderYWriter_V2();
-		fileReaderYWriter_V3();
+//		fileReaderYWriter_V3();
 		
-//		bufferReaderYWriter_V1();
+		bufferReaderYWriter_V1();
 //		bufferReaderYWriter_V2();
 //		bufferReaderYWriter_V3();
 		
@@ -140,9 +140,6 @@ public class EscrituraLectuarArchivos {
 				linea=br.readLine();
 			}
 		}catch(IOException e){
-			
-			
-			
 			System.out.println("Error E/S: "+e);
 		}
 
