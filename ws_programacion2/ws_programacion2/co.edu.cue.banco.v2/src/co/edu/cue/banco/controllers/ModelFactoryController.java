@@ -13,7 +13,7 @@ import co.edu.cue.banco.persistencia.Persistencia;
 import co.edu.cue.banco.services.IModelFactoryService;
 import javafx.collections.ObservableList;
 
-public class ModelFactoryController implements IModelFactoryService{
+public class ModelFactoryController implements IModelFactoryService, Runnable{
 
 	Banco banco;
 	
@@ -211,6 +211,19 @@ public class ModelFactoryController implements IModelFactoryService{
 	public ArrayList<Empleado> obtenerEmpleados() {
 		
 		return banco.getListaEmpleados();
+	}
+
+	@Override
+	public void run() {
+	
+		//1. hilo 1 para manejar la persistencia
+		
+		//2. hilo 2 para registrar las acciones del sistema
+		
+		//3. Para genera un archivo de integracion
+		
+		//4. Para generar reporte
+		
 	}
 
 
