@@ -9,6 +9,7 @@ import co.edu.cue.banco.exceptions.EmpleadoException;
 import co.edu.cue.banco.model.Banco;
 import co.edu.cue.banco.model.Cliente;
 import co.edu.cue.banco.model.Empleado;
+import co.edu.cue.banco.persistencia.BoundedSemaphore;
 import co.edu.cue.banco.persistencia.Persistencia;
 import co.edu.cue.banco.services.IModelFactoryService;
 import javafx.collections.ObservableList;
@@ -16,6 +17,12 @@ import javafx.collections.ObservableList;
 public class ModelFactoryController implements IModelFactoryService, Runnable{
 
 	Banco banco;
+	Thread hiloServicio1_Persistencia;
+	Thread hiloServicio2_RegistrarAcciones;
+	BoundedSemaphore semaforo = new BoundedSemaphore(1);
+	private String mensajeLog;
+	private int nivel;
+	private String accion;
 	
 	
 	//------------------------------  Singleton ------------------------------------------------
@@ -72,25 +79,6 @@ public class ModelFactoryController implements IModelFactoryService, Runnable{
 		}
 	}
 
-
-
-	public void guardarResourceXML() {
-		Persistencia.guardarRecursoBancoXML(banco);
-	}
-	
-	public void cargarResourceXML() {
-		banco = Persistencia.cargarRecursoBancoXML();
-	}
-
-
-
-	public void guardarResourceBinario() {
-		Persistencia.guardarRecursoBancoBinario(banco);
-	}
-	
-	public void cargarResourceBinario() {
-		banco = Persistencia.cargarRecursoBancoBinario();
-	}
 
 	private void inicializarDatos() {
 
@@ -213,12 +201,69 @@ public class ModelFactoryController implements IModelFactoryService, Runnable{
 		return banco.getListaEmpleados();
 	}
 
+	public void guardarResourceXML() {
+		hiloServicio1_Persistencia = new Thread(this);
+		hiloServicio1_Persistencia.start();
+	}
+	
+	public void cargarResourceXML() {
+		banco = Persistencia.cargarRecursoBancoXML();
+	}
+
+
+
+	public void guardarResourceBinario() {
+		Persistencia.guardarRecursoBancoBinario(banco);
+	}
+	
+	public void cargarResourceBinario() {
+		banco = Persistencia.cargarRecursoBancoBinario();
+	}
+
+	public void registrarAccioneSistema(String mensajeLog, int nivel, String accion) {
+		hiloServicio2_RegistrarAcciones = new Thread(this);
+		this.mensajeLog = mensajeLog;
+		this.nivel = nivel;
+		this.accion = accion;
+		hiloServicio2_RegistrarAcciones.start();
+	}
+	
+	
 	@Override
 	public void run() {
 	
+		Thread hiloActual = Thread.currentThread();
+		
+		
+		try {
+			semaforo.ocupar();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		//1. hilo 1 para manejar la persistencia
+		if(hiloActual == hiloServicio1_Persistencia){
+			Persistencia.guardarRecursoBancoXML(banco);
+			try {
+				semaforo.liberar();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		//2. hilo 2 para registrar las acciones del sistema
+		if(hiloActual == hiloServicio2_RegistrarAcciones){
+			Persistencia.guardaRegistroLog(mensajeLog, nivel, accion);
+			try {
+				semaforo.liberar();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		
 		//3. Para genera un archivo de integracion
 		
