@@ -6,12 +6,12 @@ public class EjemplosBasicos {
 	static int fib = 0;
 	public static void main(String[] args) 
 	{
-		int n = 7;
+		int n = 3;
 		
-//		sumaN_Enteros(n);
+		sumaN_Enteros(n);
 //		calcularFactorial(n);
 //		calcularFactorial_Iteractio(3);
-		System.out.println(fibonacci(n));
+//		System.out.println(fibonacci(n));
 	}
 	
 	
@@ -45,13 +45,11 @@ public class EjemplosBasicos {
 		
 		if(n==1)
 		{
-			System.out.println("Valor del factorial de "+n+"!= "+1);
 			return 1;
 		}
 		else
 		{
 			resultado = n * calcularFactorial(n-1);
-			System.out.println("Valor del factorial de "+n+"!= "+resultado);
 			return resultado;
 		}
 	}
