@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_111" class="java.beans.XMLDecoder">
+ <object class="parcial1.Universidad" id="Universidad0">
+  <void property="listaFacultades">
+   <void method="add">
+    <object class="parcial1.Facultad">
+     <void property="nombre">
+      <string>Medicina</string>
+     </void>
+    </object>
+   </void>
+   <void method="add">
+    <object class="parcial1.Facultad" id="Facultad0">
+     <void property="listaProgramas">
+      <void method="add">
+       <object class="parcial1.Programa">
+        <void property="codigo">
+         <int>1</int>
+        </void>
+        <void property="modalidad">
+         <string>semi-distancia</string>
+        </void>
+        <void property="nombre">
+         <string>Ing software</string>
+        </void>
+       </object>
+      </void>
+     </void>
+     <void property="nombre">
+      <string>Ingenieria</string>
+     </void>
+    </object>
+   </void>
+  </void>
+ </object>
+</java>

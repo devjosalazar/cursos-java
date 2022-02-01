@@ -1,5 +1,9 @@
 package hilosSincronizacion;
 
+import java.beans.PersistenceDelegate;
+
+import persistencia.Persistencia;
+
 public class MainHilo {
 
 	public static void main(String[] args) {
@@ -24,6 +28,5 @@ public class MainHilo {
 
 		
 	}
-
 
 }
