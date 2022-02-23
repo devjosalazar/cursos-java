@@ -30,42 +30,47 @@ public class TransaccionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        resp.setContentType("text/html");
         getDataRequest(req);
         validarParametros();
 
 
-        resp.setContentType("text/html");
-       try( PrintWriter out = resp.getWriter()) {
+        if(listaErrores.isEmpty()){
+            try( PrintWriter out = resp.getWriter()) {
 
-           out.println("<!DOCTYPE html>");
-           out.println("<html>");
-           out.println("   <head>");
-           out.println("       <meta  chartset=\"UTF-8\">");
-           out.println("       <title>Resultados de la transacción</title>");
-           out.println("   </head>");
-           out.println("   <body>");
-           out.println("       <h1>Información de la transacción realizada</h1>");
-           out.println("         <ul>");
-           out.println("   <li>Codigo de la transacción " + codigoTransaccion + "</li>");
-           out.println("   <li>Fecha: " + fecha + "</li>");
-           out.println("   <li>Hora: " + hora + "</li>");
-           out.println("   <li>Valor: " + valor + "</li>");
-           out.println("   <li>Tipo de transacción: " + tipoTransaccion + "</li>");
-           out.println("   <li>Cliente: " + cliente + "</li>");
-           out.println("   <li>Tipo de cuenta: " + tipoCuenta + "</li>");
-           out.println("   <li>Cuenta: " + cuenta + "</li>");
-           out.println("   <li>Empleado: " + empleado +"</li>");
-           out.println("   <li>Roles: <ul>");
+                out.println("<!DOCTYPE html>");
+                out.println("<html>");
+                out.println("   <head>");
+                out.println("       <meta  chartset=\"UTF-8\">");
+                out.println("       <title>Resultados de la transacción</title>");
+                out.println("   </head>");
+                out.println("   <body>");
+                out.println("       <h1>Información de la transacción realizada</h1>");
+                out.println("         <ul>");
+                out.println("   <li>Codigo de la transacción " + codigoTransaccion + "</li>");
+                out.println("   <li>Fecha: " + fecha + "</li>");
+                out.println("   <li>Hora: " + hora + "</li>");
+                out.println("   <li>Valor: " + valor + "</li>");
+                out.println("   <li>Tipo de transacción: " + tipoTransaccion + "</li>");
+                out.println("   <li>Cliente: " + cliente + "</li>");
+                out.println("   <li>Tipo de cuenta: " + tipoCuenta + "</li>");
+                out.println("   <li>Cuenta: " + cuenta + "</li>");
+                out.println("   <li>Empleado: " + empleado +"</li>");
+                out.println("   <li>Roles: <ul>");
+     
+                for (String rol: listaRoles) {
+                    out.println("            <li>"+ rol+"</li>");
+                }
+                out.println("           </ul></li>");
+                out.println("         </ul>");
+                out.println("   </body>");
+                out.println("</html>");
+            }
+        }else{
+            req.setAttribute("errores",listaErrores);
+            getServletContext().getRequestDispatcher("/index.jsp").forward(req,resp);
+        }
 
-           for (String rol: listaRoles) {
-               out.println("            <li>"+ rol+"</li>");
-           }
-           out.println("           </ul></li>");
-           out.println("         </ul>");
-           out.println("   </body>");
-           out.println("</html>");
-       }
     }
 
     private void getDataRequest(HttpServletRequest req) {
@@ -83,9 +88,46 @@ public class TransaccionServlet extends HttpServlet {
 
     private void validarParametros() {
 
-        if(codigoTransaccion == null || codigoTransaccion.isBlank()){
-            listaErrores.put("codigoTransaccion", "Codigo de la transacción no ingresado");
+        if (codigoTransaccion == null || codigoTransaccion.isBlank()) {
+            listaErrores.put("codigoTransaccion","Codigo de la transacción no ingresado");
         }
+
+        if (fecha == null || fecha.isBlank()) {
+            listaErrores.put("fecha","Fecha de la transacción no ingresada");
+        }
+
+        if (hora == null || hora.isBlank()) {
+            listaErrores.put("hora","Hora de la transacción no ingresada");
+        }
+
+        if (valor == null || valor == 0.0) {
+            listaErrores.put("valor","Valor de la transacción no ingresado");
+        }
+
+        if (tipoTransaccion == null) {
+            listaErrores.put("tipoTransaccion","Tipo de transacción requerido");
+        }
+
+        if (cliente == null || cliente.equals("") || cliente.equals("--seleccione cliente--")) {
+            listaErrores.put("cliente","Cliente asociado a la transacción es requerido");
+        }
+
+        if (tipoCuenta == null) {
+            listaErrores.put("tipoCuenta","Tipo de cuenta requerido");
+        }
+
+        if (cuenta == null || cuenta.isBlank()) {
+            listaErrores.put("cuenta","Numero de cuenta no ingresado");
+        }
+
+        if (empleado == null || empleado.equals("") || empleado.equals("--seleccione empleado--")) {
+            listaErrores.put("empleado","Empleado asociado a la transacción es requerido");
+        }
+
+        if (listaRoles == null || listaRoles.length == 0) {
+            listaErrores.put("roles","Debe seleccionar al menos un rol!");
+        }
+
 
     }
 }
